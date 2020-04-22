@@ -1,0 +1,15 @@
+{
+  "short_name": "Nina Khalifa",
+  "name": "Nina Khalifa Fun",
+  "description":"Nina Khalifa Fun",
+  "start_url": "/",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "theme_color": "#383838"
+}
