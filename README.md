@@ -38,7 +38,7 @@ Set the link for redirect after subscription in var `outlink` (with scheme).
 
 Set the base domain for subdomain redirect loop in var `domain` (without scheme).
 
-Set postbacklink in var `postbacklink`. The placeholder `{clickid}` will be replaced for value `clickid` from GET query string.
+Set postback link in var `postbacklink`. The placeholder `{clickid}` will be replaced for value `clickid` from GET query string.
 
     https://track-domain.com?cnv_id={clickid}
 
