@@ -186,7 +186,7 @@ function sendToken(currentToken) {
                 setData(data.entity.id, currentToken);
                 //Do postback for tracking subscription
                 if(clickid) {
-                    fetch("https://trackonroi.com/track.php?cnv_id="+clickid).then(function () {
+                    fetch(postbacklink.replace("{clickid}", clickid)).then(function () {
                         out();
                     })
                         .catch(function () {
