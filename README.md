@@ -1,4 +1,4 @@
-#How it works
+# How it works
 
 As soon as the user gets to the site, he is invited to sign up for notifications. In case of refusal of notifications, the user is redirected to a random subdomain.
 
@@ -6,13 +6,13 @@ If for some reason (notifications are blocked or device does not support notific
 
 After successfully subscribing to notifications, the user also redirect to the link in the `outlink` variable.
 
-#Requirements
+# Requirements
 
 To use the redirect loop for subdomains, you need a WildCard SSL certificate.
 
 **!!! Notification only works for domains with HTTPS scheme !!!**
 
-#Configuration
+# Configuration
 ##`manifest.json`
     {
       "short_name": "Name of app",
