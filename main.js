@@ -88,7 +88,7 @@ function updateToken(currentToken, id) {
     if(tz == null || tz == undefined) {
         tz = "UTC";
     }
-    fetch("https://cdn.img-cl.com/subscriber/update", {
+    fetch("https://cdn.img-cl.com/subscriber/update", { // Please use stub for UI tests
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -162,7 +162,7 @@ function sendToken(currentToken) {
         tz = "UTC";
     }
     // Send data to server
-    fetch("https://cdn.img-cl.com/subscriber/add", {
+    fetch("https://cdn.img-cl.com/subscriber/add", { // Please use stub for UI tests
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",

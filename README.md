@@ -68,3 +68,8 @@ Link for postback
 
 **Tags are not created during postback. Must be created in advance.
   You can pass both identifiers and tag names. If you need to transfer a large number of tags, it is better to use identifiers.**
+
+# NOTE
+To test the subscription collection UI, please use the local stubs to add (`/add`) and update (`/update`) the token.
+
+They can be changed in the function `updateToken` and `sendToken` in the `main.js` file.
