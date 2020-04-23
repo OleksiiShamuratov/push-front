@@ -13,7 +13,7 @@ To use the redirect loop for subdomains, you need a WildCard SSL certificate.
 **!!! Notification only works for domains with HTTPS scheme !!!**
 
 # Configuration
-##`manifest.json`
+## `manifest.json`
     {
       "short_name": "Name of app",
       "name": "Full name of app",
