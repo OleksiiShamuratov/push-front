@@ -64,7 +64,7 @@ Parameters should be passed in the GET query string.
 # Add tags to audience with postback
 Link for postback
 
-    https://cdn.img-cl.com/postback/1?tags={1_tag_name_or_id},{2_tag_name_or_id},...,{n_tag_name_or_id}
+    https://cdn.img-cl.com/postback/{userid}?tags={1_tag_name_or_id},{2_tag_name_or_id},...,{n_tag_name_or_id}
 
 **Tags are not created during postback. Must be created in advance.
   You can pass both identifiers and tag names. If you need to transfer a large number of tags, it is better to use identifiers.**
