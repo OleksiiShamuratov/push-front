@@ -40,7 +40,6 @@ function subscribe() {
                             else if (data.id != null && currentToken.localeCompare(data.token) != 0) {
                                 updateToken(currentToken, data.id);
                             }
-                            out();
                         }
                         else {
                             out();
