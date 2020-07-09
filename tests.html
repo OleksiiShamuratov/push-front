@@ -23,13 +23,13 @@
                 "Content-type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify({
-                token: "sdjbnuigb4rkjbgveoiusdhjskvjcbj",
+                token: "sdjbnuigb4rkjbgveoiusdhjdfggfskvhvhjjjcbjsfs",
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                tag: 2,
-                administrator: 1,
-                category: 2,
+                tags: [],
+                administrator_id: 1,
+                category_id: 2,
                 traffic_source_id: 2,
-                country_id: 10,
+                country_id: 11,
             })
         })
             .then((response) => {
@@ -63,7 +63,21 @@
                 console.log(err)
             });
     }
-    subscribe();
+    function lead() {
+        fetch("https://subscribe.dev.justtrackme.website/conversions", {
+            method: "PUT",
+            cache: 'no-cache',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+            body: JSON.stringify({
+                campaign_id: 1,
+                subscriber_id: 1004007,
+                tags: [1, 2]
+            })
+        })
+    }
+    lead();
 </script>
 </body>
 </html>
