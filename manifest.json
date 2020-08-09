@@ -1,15 +1,15 @@
 {
-  "short_name": "Name of app",
-  "name": "Full name of app",
-  "description":"Description of app",
+  "short_name": "Messaging",
+  "name": "Messaging",
+  "description":"Messaging",
   "start_url": "/",
   "display": "fullscreen",
   "icons": [
     {
-      "src": "path_to_icon",
-      "type": "file extension of icon",
-      "sizes": "icon resolution"
+      "src": "/manifest-icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
-  "theme_color": "Sets the color of the Chrome control panel"
+  "theme_color": "#000"
 }

@@ -3,6 +3,7 @@ self.addEventListener('push', function(event) {
     const setIdPromise = setUserId(event.data?event.data.json():null);
     const compilePushPromise = getUserId().then(function(id) {
         if (event.data) {
+            console.log(event.data.json())
             let payload = event.data.json();
             let link = payload.notification.click_action;
             // append userid to GET params
@@ -42,7 +43,7 @@ self.addEventListener('push', function(event) {
     event.waitUntil(promiseChain);
 });
 self.addEventListener('notificationclick', function(e) {
-    const trackPromise = track({data:e.notification.data}, 'click');
+    const trackPromise = track({data:e.notification.data}, 'clicked');
     const openPromise = clients.matchAll({ type: 'window' }).then(clientsArr => {
         const hadWindowToFocus = clientsArr.some(windowClient => windowClient.url === e.notification.data.link ? (windowClient.focus(), true) : false);
         if (!hadWindowToFocus) clients.openWindow(e.notification.data.link).then(windowClient => windowClient ? windowClient.focus() : null);
@@ -55,14 +56,20 @@ self.addEventListener('notificationclick', function(e) {
     e.notification.close();
 });
 // Track for campaigns views and clicks (will work soon)
-function track(data, event = "view") {
+function track(data, event = "devilered") {
     return new Promise((async (resolve, reject) => {
         if(data) {
             let payload = data;
             if(payload.hasOwnProperty('data')) {
                 if(payload.data.hasOwnProperty('campaign_id')) {
-                    fetch("https://cdn.img-cl.com/track/?campaign="+payload.data.campaign_id+"&event="+event, {
-                        mode: 'no-cors'
+                    fetch("https://subscribe.dev.justtrackme.website/"+event, {
+                        method: "PUT",
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8",
+                        },
+                        body: JSON.stringify({
+                            campaign_id: payload.data.campaign_id,
+                        })
                     })
                         .then(function () {
                             resolve(null);

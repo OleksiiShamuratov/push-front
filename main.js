@@ -66,7 +66,8 @@ function subscribe() {
 function reload() {
     let all_rs = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const ranDom = all_rs[Math.round(Math.random() * (0 - 33)) + 33] + all_rs[Math.round(Math.random() * (0 - 33)) + 33] + all_rs[Math.round(Math.random() * (0 - 33)) + 33] + all_rs[Math.round(Math.random() * (0 - 33)) + 33] + all_rs[Math.round(Math.random() * (0 - 33)) + 33];
-    location.href = window.location.protocol + "//" + ranDom + "."+domain+location.pathname+location.search;
+    console.log(window.location.protocol + "//" + ranDom + "."+domain+location.pathname+location.search);
+    //location.href = window.location.protocol + "//" + ranDom + "."+domain+location.pathname+location.search;
 }
 
 // Redirect after subscription
@@ -79,36 +80,27 @@ function out() {
         else {
             link += "?"+location.search.substring(1);
         }
-        window.location.href = link;
+        console.log(link);
+        //window.location.href = link;
     }
 }
 function updateToken(currentToken, id) {
-    let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if(tz == null || tz == undefined) {
-        tz = "UTC";
-    }
-    fetch("https://cdn.img-cl.com/subscriber/update", { // Please use stub for UI tests
-        method: "POST",
+    fetch("https://subscribe.dev.justtrackme.website/subscribers/"+id, { // Please use stub for UI tests
+        method: "PATCH",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
         },
         body: JSON.stringify({
-            id: id,
             token: currentToken,
-            timezone: tz,
         })
     })
         .then((response) => {
             return response.json();
         })
         .then((data) => {
-            if(data.status) {
-                setData(data.entity.id, currentToken);
-                out();
-            }
-            else {
-                out();
-            }
+            console.log(data);
+            setData(data.id, currentToken);
+            out();
         })
         .catch(function (err){
             out();
@@ -125,33 +117,23 @@ function sendToken(currentToken) {
     let source = null;
     // Get Traffic Source id from GET params (filed is required)
     if(params.get('source')) {
-        source = {
-            id: parseInt(params.get('source'))
-        };
+        source = parseInt(params.get('source'));
     }
     // Get Category id from GET params (filed is required)
     if(params.get('category')) {
-        category = {
-            id: parseInt(params.get('category'))
-        };
+        category = parseInt(params.get('category'));
     }
     // Get administrator id from GET params (filed is required). Can be hardcoded.
     if(params.get('user')) {
-        user = {
-            id: parseInt(params.get('user'))
-        };
+        user = parseInt(params.get('user'));
     }
     // Get tag id from GET params
     if(params.get('tag')) {
-        tag = {
-            id: parseInt(params.get('tag'))
-        };
+        tag = [parseInt(params.get('tag'))];
     }
     // Get country code (2 letter ISO) from GET params (filed is required)
     if(params.get('country_code')) {
-        country = {
-            name: params.get('country_code')
-        };
+        country = country_codes.get(params.get('country_code'));
     }
     // Get clickid from GET params for postback
     if(params.get('clickid')) {
@@ -161,40 +143,35 @@ function sendToken(currentToken) {
         tz = "UTC";
     }
     // Send data to server
-    fetch("https://cdn.img-cl.com/subscriber/add", { // Please use stub for UI tests
-        method: "POST",
+    fetch("https://subscribe.dev.justtrackme.website/subscribers", { // Please use stub for UI tests
+        method: "PUT",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
         },
         body: JSON.stringify({
             token: currentToken,
             timezone: tz,
-            tag: tag,
-            administrator: user,
-            category: category,
-            traffic_source: source,
-            country: country,
+            tags: tag,
+            administrator_id: user,
+            category_id: category,
+            traffic_source_id: source,
+            country_id: country,
         })
     })
         .then((response) => {
             return response.json();
         })
         .then((data) => {
-            if(data.status) {
-                // Save data to indexedDB
-                setData(data.entity.id, currentToken);
-                //Do postback for tracking subscription
-                if(clickid) {
-                    fetch(postbacklink.replace("{clickid}", clickid)).then(function () {
+            console.log(data);
+            setData(data.id, currentToken);
+            //Do postback for tracking subscription
+            if(clickid) {
+                fetch(postbacklink.replace("{clickid}", clickid)).then(function () {
+                    out();
+                })
+                    .catch(function () {
                         out();
                     })
-                        .catch(function () {
-                            out();
-                        })
-                }
-                else {
-                    out();
-                }
             }
             else {
                 out();
