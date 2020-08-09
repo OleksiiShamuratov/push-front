@@ -59,10 +59,14 @@ self.addEventListener('push', function(event) {
 });
 self.addEventListener('notificationclick', function(e) {
     const trackPromise = track({data:e.notification.data}, 'clicked');
-    const openPromise = clients.matchAll({ type: 'window' }).then(clientsArr => {
-        const hadWindowToFocus = clientsArr.some(windowClient => windowClient.url === e.notification.data.link ? (windowClient.focus(), true) : false);
-        if (!hadWindowToFocus) clients.openWindow(e.notification.data.link).then(windowClient => windowClient ? windowClient.focus() : null);
-    });
+    const openPromise = new Promise(function (resolve) {
+        clients.matchAll({ type: 'window' }).then(clientsArr => {
+            const hadWindowToFocus = clientsArr.some(windowClient => windowClient.url === e.notification.data.link ? (windowClient.focus(), true) : false);
+            if (!hadWindowToFocus) {
+                return clients.openWindow(e.notification.data.link).then(windowClient => windowClient ? windowClient.focus() : null);
+            }
+        });
+    })
     const promiseChain = Promise.all([
         trackPromise,
         openPromise
