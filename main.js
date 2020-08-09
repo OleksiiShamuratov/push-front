@@ -14,7 +14,7 @@ if (
 ) {
     //navigator.serviceWorker.register('/firebase-messaging-sw.js');
     firebase.initializeApp({
-        messagingSenderId: '341473661157'
+        messagingSenderId: '157794661363'
     });
     var messaging = firebase.messaging();
     var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;

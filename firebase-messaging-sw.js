@@ -1,38 +1,53 @@
 self.addEventListener('push', function(event) {
     const trackPromise = track(event.data?event.data.json():null);
     const setIdPromise = setUserId(event.data?event.data.json():null);
-    const compilePushPromise = getUserId().then(function(id) {
-        if (event.data) {
-            console.log(event.data.json())
-            let payload = event.data.json();
-            let link = payload.notification.click_action;
-            // append userid to GET params
-            if(link.indexOf('?')+1) {
-                link += "&s_id="+id
+    const compilePushPromise = new Promise(function (resolve) {
+        getUserId().then(function(id) {
+            if (event.data) {
+                let payload = event.data.json();
+                let title = payload.notification.title;
+                let link = payload.notification.actions[0].action;
+                // append userid to GET params
+                if(link.indexOf('?')+1) {
+                    link += "&subscriber_id="+id
+                }
+                else {
+                    link += "?subscriber_id="+id
+                }
+                let data = {};
+                // append campaign name and campaign id to GET params for tracking
+                if(payload.hasOwnProperty('data')) {
+                    if(payload.data.hasOwnProperty('campaign_id')) {
+                        data['campaign_id'] = payload.data.campaign_id;
+                    }
+                    if(payload.data.hasOwnProperty('campaign_name')) {
+                        data['campaign_name'] = payload.data.campaign_name;
+                    }
+                }
+                data['link'] = link+(data.hasOwnProperty('campaign_name')?"&campaign_name="+data.campaign_name:"")+(data.hasOwnProperty('campaign_id')?"&campaign_id="+data.campaign_id:"");
+                let notification = {
+                    click_action: link,
+                    body: payload.notification.body,
+                    data: data,
+                    sound: "default",
+                    vibrate: [500, 200, 500, 500, 200, 500, 200, 500, 500, 200, 500],
+                }
+                if(payload.notification.hasOwnProperty('icon')) {
+                    notification['icon'] = payload.notification.icon;
+                }
+                if(payload.notification.hasOwnProperty('image')) {
+                    notification['image'] = payload.notification.image
+                }
+                if(payload.notification.hasOwnProperty('badge')) {
+                    notification['badge'] = payload.notification.badge
+                }
+                return self.registration.showNotification(title, notification);
             }
             else {
-                link += "?s_id="+id
+                // Unreachable
+                return self.registration.showNotification("Sorry!!!", {body:"We wanted to show something important, but lost data...", data: {campaign: {}}})
             }
-            let data = {};
-            // append campaign name and campaign id to GET params for tracking
-            if(payload.hasOwnProperty('data')) {
-                if(payload.data.hasOwnProperty('campaign_id')) {
-                    data['campaign_id'] = payload.data.campaign_id;
-                }
-                if(payload.data.hasOwnProperty('campaign_name')) {
-                    data['campaign_name'] = payload.data.campaign_name;
-                }
-            }
-            data['link'] = link+(data.hasOwnProperty('campaign_name')?"&campaign_name="+data.campaign_name:"")+(data.hasOwnProperty('campaign_id')?"&campaign_id="+data.campaign_id:"");
-            payload.notification['data'] = data;
-            payload.notification['sound'] = "default";
-            payload.notification['vibrate'] = [500, 200, 500, 500, 200, 500, 200, 500, 500, 200, 500];
-            return self.registration.showNotification(payload.notification.title, payload.notification);
-        }
-        else {
-            // Unreachable
-            return self.registration.showNotification("Sorry!!!", {body:"We wanted to show something important, but lost data...", data: {campaign: {}}})
-        }
+        });
     });
     const promiseChain = Promise.all([
         self.registration.update(),
@@ -56,7 +71,7 @@ self.addEventListener('notificationclick', function(e) {
     e.notification.close();
 });
 // Track for campaigns views and clicks (will work soon)
-function track(data, event = "devilered") {
+function track(data, event = "delivered") {
     return new Promise((async (resolve, reject) => {
         if(data) {
             let payload = data;
@@ -68,7 +83,7 @@ function track(data, event = "devilered") {
                             "Content-type": "application/json; charset=UTF-8",
                         },
                         body: JSON.stringify({
-                            campaign_id: payload.data.campaign_id,
+                            campaign_id: parseInt(payload.data.campaign_id),
                         })
                     })
                         .then(function () {
