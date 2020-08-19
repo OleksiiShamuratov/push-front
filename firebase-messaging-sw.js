@@ -9,10 +9,10 @@ self.addEventListener('push', function(event) {
                 let link = payload.notification.actions[0].action;
                 // append userid to GET params
                 if(link.indexOf('?')+1) {
-                    link += "&subscriber_id="+id
+                    link += "&s_id="+id
                 }
                 else {
-                    link += "?subscriber_id="+id
+                    link += "?s_id="+id
                 }
                 let data = {};
                 // append campaign name and campaign id to GET params for tracking
