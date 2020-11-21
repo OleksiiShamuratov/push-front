@@ -86,7 +86,7 @@ function out() {
 }
 function updateToken(currentToken, id) {
     fetch("https://subscribe.dev.justtrackme.website/subscribers/"+id, { // Please use stub for UI tests
-        method: "PATCH",
+        method: "PUT",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
         },
